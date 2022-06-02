@@ -545,6 +545,7 @@ MonoBehaviour:
   CurrentUnitEffect: {fileID: 344692095794436145}
   HitUnitEffect: {fileID: 2793985904537581533}
   HP_Text: {fileID: 3708658346084587012}
+  moveToFrontSpeed: 1
 --- !u!65 &6032708413551781324
 BoxCollider:
   m_ObjectHideFlags: 0

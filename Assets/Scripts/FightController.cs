@@ -6,9 +6,6 @@ using UnityEngine.UI;
 
 public class FightController : MonoBehaviour
 {
-    public static event Action<int> StartFight;
-    public static event Action<int> EndFight;
-
     TeamSpawner teamSpawner;
 
     public List<UnitPresenter> team1;
@@ -37,10 +34,11 @@ public class FightController : MonoBehaviour
             team2[i].Init( teamSpawner.unitData[i % 2] );
         }
         //UnityEngine.Random rand = new UnityEngine.Random();
-        isPlayerMove = true;//UnityEngine.Random.Range( 0, 2 ) == 0 ? false : true;
+        isPlayerMove = false;//UnityEngine.Random.Range( 0, 2 ) == 0 ? false : true;
 
-        StartCoroutine( StartNextTurn_WithDealy() );
-      
+        //StartCoroutine( StartNextTurn_WithDealy() );
+        StartCoroutine( StartNextTurn() );
+
     }
 
     // Update is called once per frame
@@ -49,18 +47,18 @@ public class FightController : MonoBehaviour
         
     }
 
-    void StartNextTurn()
+    IEnumerator StartNextTurn()
     {
         if( IsTeamIsDead( team1 ) )
         {
             SetInfoText( "Победа ИИ" );
-            return;
+            yield break;
         }
 
         if( IsTeamIsDead( team2 ) )
         {
             SetInfoText( "Победа Игрока" );
-            return;
+            yield break;
         }
 
 
@@ -77,7 +75,7 @@ public class FightController : MonoBehaviour
         currentUnitToAct = GetRandomUnitToAct( actTeam );
         currentUnitToAct.SetActSprite( true );
 
-        
+        yield return new WaitForSeconds( 5 );
         if ( !isPlayerMove )
             ActOnUnit( currentUnitToAct, team1, GetRandomUnit(team1) );
     }
@@ -86,7 +84,7 @@ public class FightController : MonoBehaviour
     {
         //yield on a new YieldInstruction that waits for 5 seconds.
         yield return new WaitForSeconds( 2 );
-        StartNextTurn();
+        StartCoroutine( StartNextTurn() );
     }
 
     IEnumerator WaitFightCoroutine()
@@ -94,13 +92,13 @@ public class FightController : MonoBehaviour
         isFightInProgress = true;
 
           //yield on a new YieldInstruction that waits for 5 seconds.
-        yield return new WaitForSeconds( 1 );
+        yield return new WaitForSeconds( 2 );
 
         isFightInProgress = false;
         SetDeadStates( team1 );
         SetDeadStates( team2 );
 
-        StartNextTurn();
+        StartCoroutine( StartNextTurn() );
     }
 
     void SetInfoText( string Text){ infoText.text = Text; }
@@ -141,9 +139,7 @@ public class FightController : MonoBehaviour
     /// <param name="actOnUnit">Юнит над которым выполняется действие</param>
     void ActOnUnit( UnitPresenter actUnit ,List<UnitPresenter> team, UnitPresenter actOnUnit)
     {
-        StartFight( 0 );
         actUnit.Action( team, actOnUnit );
-
         StartCoroutine( WaitFightCoroutine() );
     }
 
@@ -243,5 +239,14 @@ public class FightController : MonoBehaviour
         team2.ForEach( ResetUnitState );
     }
 
+    public void AtackBtnPressed()
+    {
+
+    }
+
+    public void SkipBtnPressed()
+    {
+
+    }
 
 }

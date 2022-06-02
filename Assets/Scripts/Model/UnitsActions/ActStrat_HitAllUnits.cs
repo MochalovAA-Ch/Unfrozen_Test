@@ -15,4 +15,23 @@ public class ActStrat_HitAllUnits : IActionStrategy
 
         actUnit.PlayAtackAnimation( "Miner_1" );
     }
+
+    public void MoveUnitsToForefront( UnitPresenter actUnit, List<UnitPresenter> unitsToAffect, UnitPresenter targetUnit )
+    {
+        for ( int i = 0; i < unitsToAffect.Count; i++ )
+        {
+            if ( unitsToAffect != null )
+                unitsToAffect[i].IncreaseScale();
+        }
+    }
+
+    public void MoveUnitsToBackfront( UnitPresenter actUnit, List<UnitPresenter> unitsToAffect, UnitPresenter targetUnit )
+    {
+        for ( int i = 0; i < unitsToAffect.Count; i++ )
+        {
+            if ( unitsToAffect != null )
+                unitsToAffect[i].DecreaseScale();
+        }
+    }
+
 }

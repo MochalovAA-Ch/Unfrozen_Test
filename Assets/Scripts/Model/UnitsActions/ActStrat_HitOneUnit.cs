@@ -9,4 +9,15 @@ public class ActStrat_HitOneUnit : IActionStrategy
         targetUnit.TakeDamage( actUnit.Damage );
         actUnit.PlayAtackAnimation( "PickaxeCharge" );
     }
+    public void MoveUnitsToForefront( UnitPresenter actUnit, List<UnitPresenter> unitsToAffect, UnitPresenter targetUnit )
+    {
+        targetUnit.IncreaseScale();
+    }
+
+    public void MoveUnitsToBackfront( UnitPresenter actUnit, List<UnitPresenter> unitsToAffect, UnitPresenter targetUnit )
+    {
+        targetUnit.DecreaseScale();
+    }
+        
+
 }
