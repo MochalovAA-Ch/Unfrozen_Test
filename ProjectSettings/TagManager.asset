@@ -41,3 +41,6 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: InBattle
+    uniqueID: 3969735273
+    locked: 0
