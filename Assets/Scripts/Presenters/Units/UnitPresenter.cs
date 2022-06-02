@@ -70,8 +70,6 @@ public class UnitPresenter : MonoBehaviour
 
     public void Action( List<UnitPresenter> unitsToAtack, UnitPresenter clickedUnit )
     {
-        //IActionStrategy actStrategy = ActionStrategyFabric.GetStrategy( unitData.unitType ); //new ActStrat_HitAllUnits();
-        //actStrategy.Action( this, unitsToAtack, clickedUnit );
         StartCoroutine( FightCoroutine( unitsToAtack, clickedUnit ) );
     }
 
@@ -82,7 +80,11 @@ public class UnitPresenter : MonoBehaviour
         HP_Text.text = unitData.HP.ToString();
     }
 
-    public void SetIdleState() { skeletonAnimation.AnimationState.SetAnimation( 0, "Idle", true ); }
+    public void SetIdleState() 
+    { 
+        skeletonAnimation.AnimationState.SetAnimation( 0, "Idle", true ); 
+        meshRenderer.sortingOrder = 0; 
+    }
 
     public void IncreaseScale()
     {
@@ -108,7 +110,7 @@ public class UnitPresenter : MonoBehaviour
 
     IEnumerator MoveUnitToBackfront( IActionStrategy actStrategy, List<UnitPresenter> unitsToAtack, UnitPresenter clickedUnit )
     {
-        meshRenderer.sortingOrder = 1;
+        
 
         while ( transform.localScale.x > 1.0f )
         {

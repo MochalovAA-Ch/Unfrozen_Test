@@ -14,12 +14,10 @@ public class FightController : MonoBehaviour
     public Text infoText;
 
     UnitPresenter currentUnitToAct;
-    //List<UnitPre>
 
     bool isPlayerMove;
     bool isFightInProgress;
-    bool isFightOver;
-
+    bool isAtackAction;
 
     // Start is called before the first frame update
     void Start()
@@ -33,12 +31,9 @@ public class FightController : MonoBehaviour
             team1[i].Init( teamSpawner.unitData[i % 2] );
             team2[i].Init( teamSpawner.unitData[i % 2] );
         }
-        //UnityEngine.Random rand = new UnityEngine.Random();
-        isPlayerMove = false;//UnityEngine.Random.Range( 0, 2 ) == 0 ? false : true;
+        isPlayerMove = UnityEngine.Random.Range( 0, 2 ) == 0 ? false : true;
 
-        //StartCoroutine( StartNextTurn_WithDealy() );
         StartCoroutine( StartNextTurn() );
-
     }
 
     // Update is called once per frame
@@ -47,8 +42,11 @@ public class FightController : MonoBehaviour
         
     }
 
+
     IEnumerator StartNextTurn()
     {
+        isAtackAction = false;
+
         if( IsTeamIsDead( team1 ) )
         {
             SetInfoText( "Победа ИИ" );
@@ -60,7 +58,6 @@ public class FightController : MonoBehaviour
             SetInfoText( "Победа Игрока" );
             yield break;
         }
-
 
 
         if ( !IsTeamCanAct( team1 ) && IsTeamCanAct( team2 ) )
@@ -80,18 +77,10 @@ public class FightController : MonoBehaviour
             ActOnUnit( currentUnitToAct, team1, GetRandomUnit(team1) );
     }
 
-    IEnumerator StartNextTurn_WithDealy()
-    {
-        //yield on a new YieldInstruction that waits for 5 seconds.
-        yield return new WaitForSeconds( 2 );
-        StartCoroutine( StartNextTurn() );
-    }
-
     IEnumerator WaitFightCoroutine()
     {
         isFightInProgress = true;
 
-          //yield on a new YieldInstruction that waits for 5 seconds.
         yield return new WaitForSeconds( 2 );
 
         isFightInProgress = false;
@@ -145,7 +134,7 @@ public class FightController : MonoBehaviour
 
     void OnUnitClicked( UnitPresenter clickedUnit )
     {
-        if ( !isPlayerMove || isFightInProgress)
+        if ( !isPlayerMove || isFightInProgress || !isAtackAction )
             return;
 
         if( team1[0] == clickedUnit )
@@ -165,7 +154,7 @@ public class FightController : MonoBehaviour
 
     void OnUnitMouseEnter( UnitPresenter unitPresenter )
     {
-        if ( !isPlayerMove || isFightInProgress) return;
+        if ( !isPlayerMove || isFightInProgress || !isAtackAction) return;
         SetHitSpriteToUnit( unitPresenter, true );
     }
 
@@ -241,12 +230,17 @@ public class FightController : MonoBehaviour
 
     public void AtackBtnPressed()
     {
+        if ( isFightInProgress || !isPlayerMove ) return;
 
+        isAtackAction = true;
+        SetInfoText( "Выберите юнита для атаки" );
     }
 
     public void SkipBtnPressed()
     {
+        if ( isFightInProgress || !isPlayerMove ) return;
 
+        isAtackAction = false;
+        StartCoroutine( WaitFightCoroutine() );
     }
-
 }
